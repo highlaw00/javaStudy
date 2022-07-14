@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 class Exercise {
@@ -13,19 +18,20 @@ class Exercise {
 		this.sets = s;
 	}
 
-	public void testPrint() {
-		System.out.println("Workout Name: " + this.workoutName);
-		System.out.println("Weight: " + this.weight);
-		System.out.println("Reps: " + this.reps);
-		System.out.println("Sets: " + this.sets);
-		System.out.println("Total Volume: " + (this.weight * this.reps * this.sets));
-
+	public void testPrint() throws IOException {
+		FileWriter fout = new FileWriter(new File("D:\\workoutFile\\" + this.workoutName + ".txt"), true);
+		fout.write("Workout Name: " + this.workoutName + "\n");
+		fout.write("Weight: " + this.weight + "kg" + "\n");
+		fout.write("Reps: " + this.reps + "\n");
+		fout.write("Sets: " + this.sets + "\n");
+		fout.write("Total Volume: " + (this.weight * this.reps * this.sets) + "kg" + "\n");
+		fout.close();
 	}
 }
 
 public class VolumeCalculator {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		Scanner s1 = new Scanner(System.in);
 
@@ -53,6 +59,7 @@ public class VolumeCalculator {
 		for (int tmp = 0; tmp < i; tmp++) {
 			exerciseArray[tmp].testPrint();
 		}
+
 	}
 
 }
