@@ -5,11 +5,23 @@ import java.util.Scanner;
 class Order {
 	private List<Menu> orderList = new ArrayList<Menu>();
 	private Menu[][] menuArray = new Menu[3][3];
+	private static final int coffeeArraySize = 3;
+	private static final int cakeArraySize = 3;
+	private static final int tumblerArraySize = 3;
 
 	public Order() {
 		menuArray[0][0] = new Menu("\"Today\'s Coffee\"", 5, 3.0);
-		menuArray[1][0] = new Menu("\"Cheese Cake\"", 5, 3.0);
-		menuArray[2][0] = new Menu("\"Starbucks Limited Edition Tumbler\"", 5, 3.0);
+		menuArray[0][1] = new Menu("\"Cafe Latte\"", 10, 4.0);
+		menuArray[0][2] = new Menu("\"Americano\"", 5, 3.5);
+
+		menuArray[1][0] = new Menu("\"Cheese Cake\"", 3, 4.0);
+		menuArray[1][1] = new Menu("\"Red Velvet Cake\"", 3, 4.0);
+		menuArray[1][2] = new Menu("\"Cookie and Cream Cake\"", 3, 5.0);
+
+		menuArray[2][0] = new Menu("\"Starbucks Limited Edition Tumbler(Pink)\"", 1, 7.0);
+		menuArray[2][1] = new Menu("\"Starbucks Limited Edition Tumbler(Sky Blue)\"", 1, 7.0);
+		menuArray[2][2] = new Menu("\"Starbucks Limited Edition Tumbler(Green)\"", 1, 7.0);
+
 	}
 
 	private void PrintMenu() {
@@ -22,17 +34,41 @@ class Order {
 
 	private void printCoffeeMenu() {
 		System.out.println("=== Coffee List ===");
-		System.out.println("1. \"Today\'s Coffee\" | Cost: 3.0$ ");
+		String coffeeName = null;
+		double cost = 0;
+
+		for (int i = 0; i < coffeeArraySize; i++) {
+			Menu currMenu = menuArray[0][i];
+			coffeeName = currMenu.getName();
+			cost = currMenu.getCost();
+			System.out.println((i + 1) + ". \"" + coffeeName + "\" | Cost: " + cost);
+		}
 	}
 
 	private void printCakeMenu() {
-		System.out.println("=== Coffee List ===");
-		System.out.println("1. \"Cheese Cake\" | Cost: 4.5$ ");
+		System.out.println("=== Cake List ===");
+		String cakeName = null;
+		double cost = 0;
+
+		for (int i = 0; i < coffeeArraySize; i++) {
+			Menu currMenu = menuArray[1][i];
+			cakeName = currMenu.getName();
+			cost = currMenu.getCost();
+			System.out.println((i + 1) + ". \"" + cakeName + "\" | Cost: " + cost);
+		}
 	}
 
 	private void printTumblerMenu() {
-		System.out.println("=== Coffee List ===");
-		System.out.println("1. \"Starbucks Limited Edition Tumbler\" | Cost: 7.0$ ");
+		System.out.println("=== Tumbler List ===");
+		String tumblerName = null;
+		double cost = 0;
+
+		for (int i = 0; i < coffeeArraySize; i++) {
+			Menu currMenu = menuArray[2][i];
+			tumblerName = currMenu.getName();
+			cost = currMenu.getCost();
+			System.out.println((i + 1) + ". \"" + tumblerName + "\" | Cost: " + cost);
+		}
 	}
 
 	private Menu chooseMenu(int typeNum, int productionNum) {
@@ -43,46 +79,67 @@ class Order {
 		System.out.println("Your " + str + " has been added to your shopping cart.");
 	}
 
-	// 사용자가 실수로 입력할 것 차단 해야함.
+	private boolean isItOutOfBound(int n1, int n2) {
+		int temp = 0;
 
-	private boolean orderMenu() {
-		this.PrintMenu();
-
-		Scanner sc = new Scanner(System.in);
-		int i = sc.nextInt();
-
-		if (i == 1) {
-			// coffee 메뉴 열기
-			// coffee 메뉴 선택
-			// coffee 메뉴 장바구니 추가
-			this.printCoffeeMenu();
-			int j = sc.nextInt();
-			this.orderList.add(this.chooseMenu(i, j));
-		} else if (i == 2) {
-			// cake 메뉴 열기
-			this.printCakeMenu();
-			int j = sc.nextInt();
-			this.orderList.add(this.chooseMenu(i, j));
-		} else if (i == 3) {
-			// tumbler 메뉴 열기
-			this.printTumblerMenu();
-			int j = sc.nextInt();
-			this.orderList.add(this.chooseMenu(i, j));
+		if (n1 == 1) {
+			temp = coffeeArraySize;
+		} else if (n1 == 2) {
+			temp = cakeArraySize;
 		} else {
-			return false;
+			temp = tumblerArraySize;
 		}
 
-		Menu currMenu = this.orderList.get(this.orderList.size() - 1);
-		PrintCompleteMsg(currMenu.getName());
+		if (n2 > temp || n2 <= 0) {
+			System.out.println("You entered a wrong number.");
+			System.out.println();
+			return true;
+		} else
+			return false;
+	}
 
-		return true;
+	private void orderMenu() {
+		Scanner sc = new Scanner(System.in);
+		while (true) {
+			this.PrintMenu();
+			int i = sc.nextInt();
+			
+			if (i == 1) {
+
+				this.printCoffeeMenu();
+				int j = sc.nextInt();
+				if (isItOutOfBound(i, j))
+					continue;
+				this.orderList.add(this.chooseMenu(i, j));
+
+			} else if (i == 2) {
+
+				this.printCakeMenu();
+				int j = sc.nextInt();
+				if (isItOutOfBound(i, j))
+					continue;
+				this.orderList.add(this.chooseMenu(i, j));
+
+			} else if (i == 3) {
+
+				this.printTumblerMenu();
+				int j = sc.nextInt();
+				if (isItOutOfBound(i, j))
+					continue;
+				this.orderList.add(this.chooseMenu(i, j));
+
+			} else {
+				break;
+			}
+			Menu currMenu = this.orderList.get(this.orderList.size() - 1);
+			PrintCompleteMsg(currMenu.getName());
+			System.out.println();
+		}
+
 	}
 
 	public void OrderStart() {
-		while (this.orderMenu()) {
-
-		}
-
+		this.orderMenu();
 		System.out.println("Order Done.");
 	}
 
@@ -135,6 +192,10 @@ class Menu {
 		return this.time;
 	}
 
+	public double getCost() {
+		return this.cost;
+	}
+
 	public void setName(String str) {
 		this.name = str;
 	}
@@ -178,8 +239,6 @@ public class Kiosk {
 		// 출품을 알려주는 알림 서비스 클래스 Call
 
 		PrintWelcomeMsg();
-
-//		List<Menu> orderList = new ArrayList<Menu>();
 
 		Order kiosk = new Order();
 		kiosk.OrderStart(); // Order는 Menu[] 를 return 한다.
