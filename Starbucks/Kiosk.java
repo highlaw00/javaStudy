@@ -103,7 +103,7 @@ class Order {
 		while (true) {
 			this.PrintMenu();
 			int i = sc.nextInt();
-			
+
 			if (i == 1) {
 
 				this.printCoffeeMenu();
@@ -140,7 +140,7 @@ class Order {
 
 	public void OrderStart() {
 		this.orderMenu();
-		System.out.println("Order Done.");
+		System.out.println("Order Done.\n");
 	}
 
 	public List<Menu> getOrderList() {
@@ -160,6 +160,16 @@ class Calculator {
 		}
 		return timeSum;
 
+	}
+
+	public static double CalculateCost(Order order) {
+		double costSum = 0.0;
+		List<Menu> menuList = order.getOrderList();
+		for (int i = 0; i < menuList.size(); i++) {
+			Menu curr = menuList.get(i);
+			costSum += curr.getCost();
+		}
+		return costSum;
 	}
 
 }
@@ -233,6 +243,23 @@ public class Kiosk {
 		System.out.println("Your foods and goods will be prepared in " + num + " minutes.");
 	}
 
+	private static void PrintCart(List<Menu> orderList) {
+		// 장바구니 돌면서 coffee, cake, tumbler 출력
+		// summary of cost 출력
+		String currMenuName = "";
+		double currMenuCost = 0.0;
+		System.out.println("===== Shopping Cart Info =====");
+		for (int i = 0; i < orderList.size(); i++) {
+			currMenuName = orderList.get(i).getName();
+			currMenuCost = orderList.get(i).getCost();
+			System.out.println((i + 1) + ". " + currMenuName + " | Cost: " + currMenuCost);
+		}
+	}
+
+	private static void PrintBill(double cost) {
+		System.out.println("Total cost: " + cost);
+	}
+
 	public static void main(String[] args) {
 		// 주문 받는 클래스 Order
 		// 받은 주문의 계산을 도와주는 클래스 Calculator
@@ -242,7 +269,9 @@ public class Kiosk {
 
 		Order kiosk = new Order();
 		kiosk.OrderStart(); // Order는 Menu[] 를 return 한다.
-		PrintTime(Calculator.CalculateTime(kiosk)); // calculate는 Menu[] 를 받아 가격을 계산하고 소요시간을 return 한다.
+		PrintCart(kiosk.getOrderList());
+		PrintBill(Calculator.CalculateCost(kiosk));
+		PrintTime(Calculator.CalculateTime(kiosk)); // calculateTime는 Order 를 받아 가격을 계산하고 소요시간을 return 한다.
 		Call.callOrder(); // 소요시간만큼 시간 이후 랜덤정수 +1의 번호와 함께 상품 회수 메세지를 출력한다.
 
 	}
